@@ -23,7 +23,7 @@ function getData() {
                 </div>`
             );
         });
-}
+}//getData
 
 function createCards(products) {
     main.innerHTML = ""; // Limpia antes de agregar
@@ -38,4 +38,4 @@ function createCards(products) {
         `;
         main.appendChild(card);
     });
-}
+}// createCards
