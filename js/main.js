@@ -1,41 +1,51 @@
 const btnLoad = document.getElementById("btnLoad");
+const container = document.getElementById("productContainer");
 const URL = "https://api.escuelajs.co/api/v1/products/";
-const main = document.getElementById("productContainer");
 
 btnLoad.addEventListener("click", function (event) {
-    event.preventDefault();
-    console.log("botón btnLoad ");
-    getData(); // Llama a la función para cargar los productos
+  event.preventDefault();
+  console.log("Cargando productos");
+  getData();
 });
 
 function getData() {
-    fetch(URL)
-        .then((response) => {
-            response.json().then((res) => {
-                console.log(res.length);
-                createCards(res.slice(0, 9)); // solo 9 productos
-            });
-        })
-        .catch((err) => {
-            main.insertAdjacentHTML("beforeend",
-                `<div class="alert alert-danger" role="alert">
-                    ${err.message}
-                </div>`
-            );
-        });
-}//getData
+  fetch(URL)
+    .then((response) => response.json())
+    .then((products) => {
+      console.log(products.length);
+      createCards(products.slice(0, 9));
+    })
+    .catch((err) => {
+      container.insertAdjacentHTML(
+        "beforeend",
+        `<div class="alert alert-danger" role="alert">
+          ${err.message}
+        </div>`
+      );
+    });
+}
 
 function createCards(products) {
-    main.innerHTML = ""; // Limpia antes de agregar
-    products.forEach(product => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-            <img src="${product.images[1] || product.images[0]}" alt="${product.title}" class="product-image">
-            <h3>${product.title}</h3>
-            <p>${product.description}</p>
-            <p><strong>$${product.price}</strong></p>
-        `;
-        main.appendChild(card);
-    });
-}// createCards
+  container.innerHTML = "";
+  products.forEach((product) => {
+    container.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div class="card shadow-sm h-100 mb-3">
+        <img src="${product.images}" class="card-img-top" height="225" style="object-fit: cover;" alt="${product.title}">
+        <div class="card-body">
+          <h5 class="card-title">${product.title}</h5>
+          <p class="card-text">${product.description.slice(0, 100)}...</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+            </div>
+            <small class="text-body-secondary">$${product.price}</small>
+          </div>
+        </div>
+      </div>
+      `
+    );
+  });
+}
